@@ -51,9 +51,9 @@ def train_model(learning_rate, steps, batch_size, input_feature="total_rooms"):
   # 设置特征列，在 TensorFlow 中，使用一种称为“特征列”的结构来表示特征的数据类型。特征列仅存储对特征数据的描述；不包含特征数据本身。
   feature_columns = [tf.feature_column.numeric_column(my_feature)]
   
-  # 创建训练集
+  # 创建训练集(注意这里是一个匿名函数)
   training_input_fn = lambda:my_input_fn(my_feature_data, targets, batch_size=batch_size)
-  # 创建测试集
+  # 创建测试集(注意这里是一个匿名函数)
   prediction_input_fn = lambda: my_input_fn(my_feature_data, targets, num_epochs=1, shuffle=False)
   
   # 创建SGD（随机梯度下降）
@@ -85,12 +85,13 @@ def train_model(learning_rate, steps, batch_size, input_feature="total_rooms"):
   root_mean_squared_errors = []
   for period in range (0, periods):
     # Train the model, starting from the prior state.
-    
+    # 训练
     linear_regressor.train(
         input_fn=training_input_fn,
         steps=steps_per_period
     )
     # Take a break and compute predictions.
+    #预测测试
     predictions = linear_regressor.predict(input_fn=prediction_input_fn)
     predictions = np.array([item['predictions'][0] for item in predictions])
     
